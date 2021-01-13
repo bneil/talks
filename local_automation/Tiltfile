@@ -1,0 +1,23 @@
+# Deploy: tell Tilt what YAML to deploy
+
+k8s_yaml('frontend/k8s.yaml')
+
+k8s_yaml('backend/k8s.yaml')
+
+# Build: tell Tilt what images to build from which directories
+
+#docker_build(
+#  'local.dev/nodedeps',
+#  './frontend/package',
+#  dockerfile='frontend/deps.dockerfile')
+
+docker_build(
+  'example-tilt-frontend-image',
+  'frontend',
+  dockerfile='frontend/app.dockerfile')
+
+docker_build('example-tilt-backend-image', 'backend')
+
+k8s_resource('example-tilt-frontend', port_forwards=8080)
+
+k8s_resource('example-tilt-backend', port_forwards=8081)
